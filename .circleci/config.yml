@@ -56,7 +56,7 @@ jobs:
     steps:
       - add_ssh_keys:
          fingerprints: 
-          - "eb:a6:7b:a1:6a:f4:34:73:95:02:9e:86:ee:15:a0:ed"
+          - "SHA256:XM+2xRjrCCSH/Frn3FMhEbTaB4RS9hNa9Wm54+iINww"
       - checkout
       # install dependencies
       - setup_remote_docker:
@@ -87,7 +87,7 @@ jobs:
       - run:
           name: ssh login  
           command: |
-            CI=false rsync -va -e 'ssh -p 21 -o StrictHostKeyChecking=no' --delete frontend/dist/ frontend/.htaccess saoenergy@saoenergy.com:dev.saoenergy.com
+            CI=false rsync -va -e 'ssh -p 7822 -o StrictHostKeyChecking=no' --delete frontend/dist/ frontend/.htaccess skillz@185.160.67.60:saoenergyadmin.skillzserver.com
       
 
   deploy-backend-dev:
@@ -127,7 +127,7 @@ jobs:
       - run:
           name: ssh login  
           command: |
-            rsync  -va -e 'ssh -p 7822 -o StrictHostKeyChecking=no' --delete backend/app backend/database  backend/phpunit.xml backend/storage backend/vendor backend/artisan backend/public/ backend/.env backend/tests backend/bootstrap  backend/composer.json  backend/resources  backend/composer.lock  backend/routes backend/config backend/package.json	 skillz@185.160.67.60:saoenergy.skillzserver.com
+            rsync  -va -e 'ssh -p 7822 -o StrictHostKeyChecking=no'  backend/app backend/database  backend/phpunit.xml backend/storage backend/vendor backend/artisan backend/public/ backend/.env backend/tests backend/bootstrap  backend/composer.json  backend/resources  backend/composer.lock  backend/routes backend/config backend/package.json	 skillz@185.160.67.60:saoenergy.skillzserver.com
 
   deploy-backend-prod:
     docker:
