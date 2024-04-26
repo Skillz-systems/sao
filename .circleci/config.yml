@@ -52,7 +52,7 @@ jobs:
   deploy-dev:
     docker:
         - image: circleci/node:14
-    working_directory: ~/repo/frontend
+    working_directory: ~/repo
     steps:
       - add_ssh_keys:
          fingerprints: 
@@ -65,21 +65,21 @@ jobs:
 
       - run:
           name: update apt-get
-          command: CI=false sudo apt-get update
+          command: CI=false sudo apt-get upgrade && apt-get update
       - run:
           name: Install dependencies
-          command: CI=false  yarn install
+          command: cd frontend && CI=false  yarn install
       - run:
           name: rename .env.example file to .env 
           command: |
-            CI=false mv .env.example .env
+            CI=false mv frontend/.env.example frontend/.env
 
       - run:
           name: build and push 
-          command: CI=false yarn build
+          command: cd frontend && CI=false yarn build
       - run:
           name: Install  rsync 
-          command: CI=false sudo apt-get install -y rsync
+          command: cd frontend && CI=false sudo apt-get install -y rsync
       - run:
           name: Update known hosts
           command: CI=false ssh-keyscan -H 66.29.151.25 >> ~/.ssh/known_hosts
@@ -87,10 +87,8 @@ jobs:
       - run:
           name: ssh login  
           command: |
-            CI=false rsync -va -e 'ssh -p 21 -o StrictHostKeyChecking=no' --delete dist/ .htaccess saoenergy@saoenergy.com:dev.saoenergy.com
-      - run:
-          name: Directory Listing  
-          command: CI=false ls
+            CI=false rsync -va -e 'ssh -p 21 -o StrictHostKeyChecking=no' --delete frontend/dist/ frontend/.htaccess saoenergy@saoenergy.com:dev.saoenergy.com
+      
 
   deploy-backend-dev:
     
