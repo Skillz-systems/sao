@@ -175,11 +175,29 @@ jobs:
       - run:
           name: Directory Listing  
           command: ls
+          
+  check_prs:
+        docker:
+        - image: circleci/python:3.8
+        steps:
+        - checkout
+        - run:
+            name: Check existing pull requests
+            command: |
+                prs=$(gh pr list --state open)
+                num_prs=$(echo "$prs" | wc -l)
+                echo "Number of open PRs: $num_prs"
+                if [ $num_prs -gt 1 ]; then
+                echo "Multiple PRs found, closing the new PR."
+                pr_number=$(jq --raw-output .pull_request.number "$CIRCLE_EVENT_PATH")
+                gh pr close $pr_number --comment "Sorry, you cannot have more than one open pull request at a time."
+                fi
 
 workflows:
   version: 2
   Sao_deploy:
     jobs:
+      - check_prs
       - deploy-dev: # Use the pre-configured job, deploy-via-git
           filters:
             branches:
