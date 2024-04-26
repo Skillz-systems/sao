@@ -63,9 +63,9 @@ jobs:
           version: 20.10.12
           docker_layer_caching: true
 
-      - run:
-          name: update apt-get
-          command: CI=false sudo apt-get upgrade && apt-get update
+    #   - run:
+    #       name: update apt-get
+    #       command: CI=false sudo apt-get upgrade && apt-get update
       - run:
           name: Install dependencies
           command: cd frontend && CI=false  yarn install
