@@ -51,7 +51,7 @@ jobs:
 
   deploy-dev:
     docker:
-        - image: circleci/node:14
+        - image: circleci/node:16
     working_directory: ~/repo
     steps:
       - add_ssh_keys:
@@ -63,9 +63,9 @@ jobs:
           version: 20.10.12
           docker_layer_caching: true
 
-    #   - run:
-    #       name: update apt-get
-    #       command: CI=false sudo apt-get upgrade && apt-get update
+      - run:
+          name: update apt-get
+          command: CI=false sudo  apt-get update
       - run:
           name: Install dependencies
           command: cd frontend && CI=false  yarn install
