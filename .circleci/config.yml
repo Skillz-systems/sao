@@ -5,7 +5,7 @@ jobs:
   deploy-prod:
     docker:
         - image: circleci/node:16
-    working_directory: ~/repo/soa_backend
+    working_directory: ~/repo/frontend
     steps:
       - add_ssh_keys:
          fingerprints: 
@@ -52,7 +52,7 @@ jobs:
   deploy-dev:
     docker:
         - image: circleci/node:14
-    working_directory: ~/repo/soa-frontend
+    working_directory: ~/repo/frontend
     steps:
       - add_ssh_keys:
          fingerprints: 
@@ -96,7 +96,7 @@ jobs:
     
     docker:
         - image: cimg/php:8.1
-    working_directory: ~/repo
+    working_directory: ~/repo/backend
     steps:
       - add_ssh_keys:
           fingerprints: 
@@ -108,7 +108,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Install dependencies
-          command:  cd sao_backend &&  CI=false   composer update 
+          command: CI=false   composer update 
 
       - run: sudo apt update
       - run: sudo apt-get install rsync
@@ -134,7 +134,7 @@ jobs:
   deploy-backend-prod:
     docker:
         - image: cimg/php:8.1
-    working_directory: ~/repo
+    working_directory: ~/repo/backend
     steps:
       - add_ssh_keys:
           fingerprints: 
