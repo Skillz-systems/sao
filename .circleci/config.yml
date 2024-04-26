@@ -96,7 +96,7 @@ jobs:
     
     docker:
         - image: cimg/php:8.1
-    working_directory: ~/repo/sao_backend
+    working_directory: ~/repo
     steps:
       - add_ssh_keys:
           fingerprints: 
@@ -108,7 +108,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Install dependencies
-          command:  CI=false ls &&  composer update 
+          command:  CI=false cd sao_backend &&  composer update 
 
       - run: sudo apt update
       - run: sudo apt-get install rsync
