@@ -119,7 +119,7 @@ jobs:
       - run:
           name: find and replace in document
           command: |
-            sed -i -e 's:/public/index.php:/index.php:g' public/index.php && sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' public/index.php && sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_sao:g' .env.example && sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=skillz_tibilon:g' .env.example  && sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' public/index.php && sed -i -e 's:DB_PASSWORD="forge":DB_PASSWORD="Ubuxa##99":g' .env.example  
+            sed -i -e 's:backend/public/index.php:/index.php:g' backend/public/index.php && sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' backend/public/index.php && sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_sao:g' backend/.env.example && sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=skillz_tibilon:g' backend/.env.example  && sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' backend/public/index.php && sed -i -e 's:DB_PASSWORD="forge":DB_PASSWORD="Ubuxa##99":g' backend/.env.example  
 
       - run:
           name: rename .env.example file to .env 
@@ -129,7 +129,7 @@ jobs:
       - run:
           name: ssh login  
           command: |
-            rsync  -va -e 'ssh -p 7822 -o StrictHostKeyChecking=no' --delete app database  phpunit.xml storage vendor artisan public/ .env tests bootstrap  composer.json  resources  composer.lock  routes config package.json	 skillz@185.160.67.60:saoenergy.skillzserver.com
+            rsync  -va -e 'ssh -p 7822 -o StrictHostKeyChecking=no' --delete backend/app backend/database  backend/phpunit.xml backend/storage backend/vendor backend/artisan backend/public/ backend/.env backend/tests backend/bootstrap  backend/composer.json  backend/resources  backend/composer.lock  backend/routes backend/config backend/package.json	 skillz@185.160.67.60:saoenergy.skillzserver.com
 
   deploy-backend-prod:
     docker:
