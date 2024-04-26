@@ -124,7 +124,7 @@ jobs:
       - run:
           name: rename .env.example file to .env 
           command: |
-            mv .env.example .env
+            mv backend/.env.example backend/.env
 
       - run:
           name: ssh login  
