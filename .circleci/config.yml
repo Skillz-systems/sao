@@ -5,7 +5,7 @@ jobs:
   deploy-prod:
     docker:
         - image: circleci/node:16
-    working_directory: ~/repo
+    working_directory: ~/repo/soa_backend
     steps:
       - add_ssh_keys:
          fingerprints: 
@@ -17,7 +17,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Install dependencies
-          command: CI=false yarn install
+          command: CI=false  yarn install
       - run:
           name: update apt-get
           command: CI=false sudo apt-get update
@@ -52,7 +52,7 @@ jobs:
   deploy-dev:
     docker:
         - image: circleci/node:14
-    working_directory: ~/repo
+    working_directory: ~/repo/soa-frontend
     steps:
       - add_ssh_keys:
          fingerprints: 
@@ -68,7 +68,7 @@ jobs:
           command: CI=false sudo apt-get update
       - run:
           name: Install dependencies
-          command: CI=false yarn install
+          command: CI=false  yarn install
       - run:
           name: rename .env.example file to .env 
           command: |
@@ -91,6 +91,93 @@ jobs:
       - run:
           name: Directory Listing  
           command: CI=false ls
+
+  deploy-backend-dev:
+    
+    docker:
+        - image: cimg/php:8.1
+    working_directory: ~/repo/soa_backend
+    steps:
+      - add_ssh_keys:
+          fingerprints: 
+          - "94:f3:79:6d:db:f2:27:8e:98:e2:7f:30:bb:da:5c:03"
+      - checkout 
+      # install dependencies
+      - setup_remote_docker:
+          version: 20.10.12
+          docker_layer_caching: true
+      - run:
+          name: Install dependencies
+          command:  CI=false  composer update 
+
+      - run: sudo apt update
+      - run: sudo apt-get install rsync
+
+      # - run:
+      #     name: Update known hosts
+      #     command:  CI=false ssh-keyscan -H 185.160.67.60 >> ~/.ssh/known_hosts && cat ~/.ssh/known_hosts
+      - run:
+          name: find and replace in document
+          command: |
+            sed -i -e 's:/public/index.php:/index.php:g' public/index.php && sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' public/index.php && sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_sao:g' .env.example && sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=skillz_tibilon:g' .env.example  && sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' public/index.php && sed -i -e 's:DB_PASSWORD="forge":DB_PASSWORD="Ubuxa##99":g' .env.example  
+
+      - run:
+          name: rename .env.example file to .env 
+          command: |
+            mv .env.example .env
+
+      - run:
+          name: ssh login  
+          command: |
+            rsync  -va -e 'ssh -p 7822 -o StrictHostKeyChecking=no' --delete app database  phpunit.xml storage vendor artisan public/ .env tests bootstrap  composer.json  resources  composer.lock  routes config package.json	 skillz@185.160.67.60:saoenergy.skillzserver.com
+
+  deploy-backend-prod:
+    docker:
+        - image: cimg/php:8.1
+    working_directory: ~/repo/soa_backend
+    steps:
+      - add_ssh_keys:
+          fingerprints: 
+           - "eb:a6:7b:a1:6a:f4:34:73:95:02:9e:86:ee:15:a0:ed"
+      - checkout
+      # install dependencies
+      - setup_remote_docker:
+          version: 20.10.12
+          docker_layer_caching: true
+      - run:
+          name: Install dependencies
+          command: CI=false composer update
+
+      - run: sudo apt update
+      - run: sudo apt-get install rsync
+      - run:
+          name: Update known hosts
+          command: ssh-keyscan -H 66.29.151.25 >> ~/.ssh/known_hosts
+      - run:
+          name: find and replace in document
+          command: |
+            sed -i -e 's:/public/index.php:/index.php:g' public/index.php && sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' public/index.php && sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_tibilon:g' .env.example && sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=skillz_tibilon:g' .env.example  && sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' public/index.php && sed -i -e 's:DB_PASSWORD=forge:DB_PASSWORD=Ubuxa##99:g' .env.example
+
+      - run:
+          name: rename .env.sample file to .env 
+          command: |
+            mv .env.sample .env
+      - run:
+          name: Directory Listing  
+          command: |
+            composer install 
+      - run:
+          name: ssh login  
+          command: |
+            rsync -va -e 'ssh -vvv -p 21098 -o StrictHostKeyChecking=no' --delete app database vendor phpunit.xml storage artisan public/ .env tests bootstrap  composer.json  docker-compose.yml      resources    webpack.mix.js composer.lock  Dockerfile.dev routes config package.json	server.php saoenergy@saoenergy.com:api.saoenergy.com
+      # - run:
+      #     name: ssh and run migration on live server  
+      #     command: |
+      #       ssh bartumen@192.254.235.94 && cd api.bartumenergy.com &&  php artisan migrate && ls && exit
+      - run:
+          name: Directory Listing  
+          command: ls
+
 workflows:
   version: 2
   Barm_deploy:
@@ -98,8 +185,16 @@ workflows:
       - deploy-dev: # Use the pre-configured job, deploy-via-git
           filters:
             branches:
-              only: dev1
+              only: dev
+      - deploy-backend-dev: # Use the pre-configured job, deploy-via-git
+          filters:
+            branches:
+              only: dev
       - deploy-prod: # Use the pre-configured job, deploy-via-git
           filters:
             branches:
-              only: init
+              only: production
+      - deploy-backend-prod: # Use the pre-configured job, deploy-via-git
+          filters:
+            branches:
+              only: production
