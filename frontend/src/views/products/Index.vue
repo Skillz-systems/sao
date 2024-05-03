@@ -870,7 +870,7 @@
                   <!--          Remove Svg Icon-->
                   <div
                     class="removeAccessory"
-                    @click="removeField(accessory, accessories)"
+                    @click="removeField(index, accessories)"
                   >
                     Remove
                     <svg
