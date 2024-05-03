@@ -200,7 +200,7 @@
                         for="num-panels"
                         class="mb-lg-1 font-weight-bolder"
                       >
-                        Discount
+                        Discount (%)
                       </label>
                       <vue-numeric-input
                         id="discount"
@@ -276,7 +276,7 @@
                         for="num-panels"
                         class="mb-lg-1 font-weight-bolder"
                       >
-                        Discount
+                        Discount (%)
                       </label>
                       <vue-numeric-input
                         id="discount"
