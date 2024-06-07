@@ -25,11 +25,11 @@ export default [
       //   route: 'available-stock',
       //   icon: 'circle',
       // },
-      {
-        title: 'Audit Log',
-        route: 'audit-log',
-        icon: 'circle',
-      },
+      // {
+      //   title: 'Audit Log',
+      //   route: 'audit-log',
+      //   icon: 'circle',
+      // },
     ],
   },
   {
