@@ -200,12 +200,13 @@
                         for="num-panels"
                         class="mb-lg-1 font-weight-bolder"
                       >
-                        Discount
+                        Discount (%)
                       </label>
                       <vue-numeric-input
                         id="discount"
                         v-model="productDiscount"
                         :min="0"
+                        :max="100" 
                         :step="1"
                         width="100%"
                         class="number-input"
@@ -275,12 +276,13 @@
                         for="num-panels"
                         class="mb-lg-1 font-weight-bolder"
                       >
-                        Discount
+                        Discount (%)
                       </label>
                       <vue-numeric-input
                         id="discount"
                         v-model="productDiscount"
                         :min="0"
+                        :max="100" 
                         :step="1"
                         width="100%"
                         class="number-input"
