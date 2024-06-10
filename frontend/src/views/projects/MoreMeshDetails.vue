@@ -140,15 +140,14 @@ export default {
       lga: null,
       description: null,
       connectionsField: [
-        { key: 'id', label: 'Connection id' },
         // { key: 'installation_name', label: 'installation name' },
-        { key: 'client_id', label: 'client Id' },
+        { key: 'client.clientname', label: 'client Name' },
         { key: 'amount', label: 'amount' },
-        { key: 'actual_amount', label: 'actual_amount' },
-        { key: 'connection_number', label: 'connection_number' },
+        { key: 'actual_amount', label: 'actual amount' },
+        { key: 'connection_number', label: 'connection number' },
         { key: 'discount', label: 'discount' },
-        { key: 'meshgrid_id', label: 'meshgrid_id' },
-        { key: 'order_description', label: 'order_description' },
+        // { key: 'meshgrid_id', label: 'meshgrid_id' },
+        { key: 'order_description', label: 'order description' },
 
       ],
       allConnections: [{
@@ -243,6 +242,7 @@ export default {
     console.log(mesh,'ddd', this.$route.query);
     this.meshGrid = [mesh]
     console.log(mesh, 'kkkkk')
+
   },
   beforeDestroy() {
     // localStorage.removeItem('products')
