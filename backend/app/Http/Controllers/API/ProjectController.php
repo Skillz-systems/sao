@@ -66,7 +66,7 @@ class ProjectController extends Controller
 
      public function getMeshgridWithProjectid($id){
         $model = ProjectMeshGrid::where('project_id',$id)
-        ->with("connections","project","order","address","product")
+        ->with("connections.client","connections.address","project","order","address","product")
         ->get();
         return response()->json([
             "status"=>"success",
@@ -354,7 +354,7 @@ class ProjectController extends Controller
      * connection would include connection fee and pod which are like meters inclusive with a tresh hold which has already been created when the meshgrid was attached to a project.
      * @param  \Illuminate\Http\Request  $request
      * @return  \Illuminate\Http\JsonResponse
-     */
+     */ 
     
     public function createMeshgridConnections(Request $request){
         // Validate all input as they are all required
@@ -445,6 +445,19 @@ class ProjectController extends Controller
         $addressModel = new MeshgridConnectionAddress();
         $connectionDetailModel = new MeshgridConnectionDetails();
         $meshGrid = ProjectMeshGrid::where("id",$request->input("meshgrid_id"))->first();//fetch amount from project meshgrid
+
+        $meshGridDetails = ProjectMeshGrid::withCount('connections')
+        ->where("id", $request->input("meshgrid_id"))
+        ->first();
+
+    // Check if the current number of connections is equal to maximum number of connections
+    if ($meshGridDetails->connections_count === $meshGrid->maxmum_connection) {
+        return response()->json([
+            "status" => "success",
+            "message" => "Maximum connection reached"
+        ], 400);
+    }
+
         $projectModel = Project::where("id",$meshGrid->project_id)->first();
         if($projectModel->projectmeshgrid->count() >= $meshGrid->maxmum_connection){
             return response()->json(['status' => 'error' , 'message'=>'Please You can not exceed he maximum connection for this meshgrid' , 'data'=>''],400);
