@@ -66,7 +66,7 @@ class ProjectController extends Controller
 
      public function getMeshgridWithProjectid($id){
         $model = ProjectMeshGrid::where('project_id',$id)
-        ->with("connections","project","order","address","product")
+        ->with("connections.client","connections.address","project","order","address","product")
         ->get();
         return response()->json([
             "status"=>"success",
