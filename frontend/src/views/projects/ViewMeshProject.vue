@@ -339,7 +339,7 @@
                 </div>
 
               </div>
-              <div class="see-more-div">
+              <!-- <div class="see-more-div">
                 <b-button
                   variant="transparent"
                   class="see-more-btn"
@@ -347,7 +347,7 @@
                 >
                   See More
                 </b-button>
-              </div>
+              </div> -->
 
             </div>
           </b-card>
