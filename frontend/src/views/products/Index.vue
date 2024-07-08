@@ -105,7 +105,7 @@
                   @filtered="onFiltered"
                 >
                   <template #cell(numberofinverters)="data">
-                    {{ data.item.inverter_availability }} {{ data.item.numberofinverters }}
+                    <!-- {{ data.item.inverter_availability }} {{ data.item.numberofinverters }} -->
                     <div style="display: flex;">
                       <div
                         v-if="data.item.inverter_availability == 'green' && data.item.numberofinverters"
