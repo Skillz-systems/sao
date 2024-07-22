@@ -53,6 +53,6 @@ jobs:
             backend/composer.json backend/resources backend/composer.lock backend/routes backend/config backend/package.json \
             backend/public/ backend/public skillz@185.160.67.60:saoenergy.skillzserver.com
 
-      - name: SSH and effect migration
-        run: |
-          ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@185.160.67.60 "cd saoenergy.skillzserver.com && php artisan migrate"
+      # - name: SSH and effect migration
+      #   run: |
+      #     ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@185.160.67.60" cd saoenergy.skillzserver.com && php artisan migrate"
