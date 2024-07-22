@@ -495,14 +495,14 @@
                       </b-form-group>
                     </b-col>
 
-                    <div v-if="showAddAnotherLocationBtn === true">
+                    <b-col v-if="showAddAnotherLocationBtn === true">
                       <b-button
-                        style="background-color: #C4C4C4 !important; border-color: #C4C4C4 !important; border-radius: 40px; margin-right: 1em"
+                        style="background-color: #C4C4C4 !important; border-color: #C4C4C4 !important; border-radius: 40px;"
                         @click="showAddressField"
                       >
                         Add Another Location
                       </b-button>
-                    </div>
+                    </b-col>
                     <b-col
                       v-if="showLocationInputFields === true"
                       lg="12"
@@ -618,22 +618,30 @@
                       <b style="color: red; margin-left: 40px">{{ message }}</b>
                     </div>
                   </b-col>
-                  <b-col>
-                    <div
-                      v-for="location in installationLocationsObject"
-                      :key="location.id"
-                    >
-                      <b>Location </b> =>
-                      {{ location.installationAddress.route }},
-                      {{ location.installationAddress.locality }} =>
-                      {{ location.installationAddress.country }}
-                      <b
-                        style="color: red; margin-left: 20px; cursor: pointer"
-                        @click="removeLocation(location.id)"
-                      >Remove
-                      </b>
-                    </div>
-                  </b-col>
+                  <b-row class="mt-2">
+                    <b-col md="6">
+                      <div v-if="installationLocationsObject.length > 0" class="locations-title">
+                        <h3>Installation Locations</h3>
+                      </div>
+                      <div v-for="location in installationLocationsObject" :key="location.id" class="location-card">
+                        <div class="location-details">
+                          <div class="location-title">Location:</div>
+                          <div class="location-address">
+                            <span class="address-part">{{ location.installationAddress.route }}</span>,
+                            <span class="address-part">{{ location.installationAddress.locality }}</span>
+                            <span class="address-part">{{ location.installationAddress.country }}</span>
+                          </div>
+                        </div>
+                        <b
+                          class="remove-button"
+                          @click="removeLocation(location.id)"
+                        >Remove</b>
+                      </div>
+                    </b-col>
+                  </b-row>
+                  
+                 
+                  
                 </div>
                 <b-row>
                   <b-col cols="12">
@@ -985,12 +993,21 @@ export default {
       this.isAddingLocation = true
       this.message = ''
 
+
+      console.log("heloo")
+
       if (
         this.state === ''
         || this.lga === ''
         || this.installationAddress === ''
       ) {
         this.message = 'fill all address fields'
+
+        console.log("state" + this.state)
+         console.log("lga" + this.lga)
+          console.log("installationAddress" + this.installationAddress)
+
+        console.log("first if")
       } else {
         const currentLocation = {
           id: this.id + 1,
@@ -1002,11 +1019,17 @@ export default {
           address: this.fullAddress,
         }
         this.id += 1
-        console.log(currentLocation, 'currentLocation')
+        console.log(currentLocation + 'currentLocation')
         this.installationLocations = this.installationLocations.concat(
           currentLocation,
         )
+
+        console.log('installationLocations'+ this.installationLocations)
+
         this.installationLocationsObject = this.installationLocations
+
+        console.log('installationLocationsObject' + this.installationLocationsObject )
+
         this.installationAddress = ''
         this.state = ''
         this.lga = ''
@@ -1289,4 +1312,47 @@ export default {
   column-gap: 1rem;
 }
 @import "@core/scss/vue/libs/vue-select.scss";
+</style>
+
+<style scoped>
+.location-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.location-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.location-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.location-address {
+  color: #555;
+}
+
+.address-part {
+  margin-right: 8px;
+}
+
+.remove-button {
+  color: red;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.remove-button:hover {
+  color: darkred;
+}
 </style>
