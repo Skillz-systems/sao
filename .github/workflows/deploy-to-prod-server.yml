@@ -43,7 +43,7 @@ jobs:
       - name: SSH login
         run: |
           mkdir -p ~/.ssh
-          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          echo "${{secrets.SSH_PRIVATE_KEY_PROD}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           rsync --delete -va -e 'ssh -p 21098 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
             backend/app backend/database backend/phpunit.xml backend/storage backend/vendor backend/artisan backend/.env backend/tests backend/bootstrap \
