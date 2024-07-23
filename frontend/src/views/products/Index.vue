@@ -105,7 +105,7 @@
                   @filtered="onFiltered"
                 >
                   <template #cell(numberofinverters)="data">
-                    {{ data.item.inverter_availability }} {{ data.item.numberofinverters }}
+                    <!-- {{ data.item.inverter_availability }} {{ data.item.numberofinverters }} -->
                     <div style="display: flex;">
                       <div
                         v-if="data.item.inverter_availability == 'green' && data.item.numberofinverters"
@@ -551,6 +551,7 @@
       hide-header
       size="lg"
       centered
+        @hidden="clearInputs"
     >
       <validation-observer ref="addProductValidation">
         <b-form @submit.prevent>
@@ -651,12 +652,13 @@
                         for="system-size"
                         class="mb-lg-1 font-weight-bolder"
                       >
-                        Inverter Type
+                        Inverter Type3
                       </label>
                       <b-form-select
                         id="system-size"
                         v-model="inverterType"
                         :options="inverterTypes"
+                         @change.native="inverterTypeChanged2"
                       />
                       <small class="text-danger">{{ errors[0] }}</small>
                     </validation-provider>
@@ -1995,6 +1997,24 @@ export default {
         this.hasBattery = false
       }
     },
+    inverterTypeChanged2(event) {
+      console.log(event.target.value, 'inverter event', event.target, event.value)
+      console.log(this, 'dsskksks')
+
+
+      
+
+      const inverter = this.inverterTypes.filter(inverterType => inverterType.value == event.target.value)
+
+      if (inverter[0]?.hasb3 == 'yes') {
+        if (this.ProductType == 'default') {
+          this.hasBattery = true
+        }
+      } else {
+        this.hasBattery = false
+      }
+
+    },
     onFiltered(filteredItems) {
       this.totalRows = filteredItems.length
       this.currentPage = 1
@@ -2053,7 +2073,24 @@ export default {
       this.$refs['add-gas-product'].hide()
       this.$refs['add-street-light-product'].hide()
       this.$refs['view-product'].hide()
+      this.clearInputs()
+      console.log('hello')
     },
+
+    clearInputs(){
+      console.log("cleared")
+
+      this.productName = ''; // Clear product name input
+    this.ProductType = ''; // Clear product type input
+    this.inverterType = ''; // Clear inverter type input
+    this.solarType = ''; // Clear solar system type input
+    this.solarPanelQuantity = 0; // Clear solar panel quantity input
+    this.batteryType = ''; // Clear battery type input
+    this.batteryQuantity = 0;
+    this.description = ""
+
+    },
+
     hideEditModal() {
       this.$refs['edit-product'].hide()
     },
