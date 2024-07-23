@@ -105,7 +105,7 @@
                   @filtered="onFiltered"
                 >
                   <template #cell(numberofinverters)="data">
-                    {{ data.item.inverter_availability }} {{ data.item.numberofinverters }}
+                    <!-- {{ data.item.inverter_availability }} {{ data.item.numberofinverters }} -->
                     <div style="display: flex;">
                       <div
                         v-if="data.item.inverter_availability == 'green' && data.item.numberofinverters"
@@ -652,12 +652,13 @@
                         for="system-size"
                         class="mb-lg-1 font-weight-bolder"
                       >
-                        Inverter Type
+                        Inverter Type3
                       </label>
                       <b-form-select
                         id="system-size"
                         v-model="inverterType"
                         :options="inverterTypes"
+                         @change.native="inverterTypeChanged2"
                       />
                       <small class="text-danger">{{ errors[0] }}</small>
                     </validation-provider>
@@ -1995,6 +1996,24 @@ export default {
       } else {
         this.hasBattery = false
       }
+    },
+    inverterTypeChanged2(event) {
+      console.log(event.target.value, 'inverter event', event.target, event.value)
+      console.log(this, 'dsskksks')
+
+
+      
+
+      const inverter = this.inverterTypes.filter(inverterType => inverterType.value == event.target.value)
+
+      if (inverter[0]?.hasb3 == 'yes') {
+        if (this.ProductType == 'default') {
+          this.hasBattery = true
+        }
+      } else {
+        this.hasBattery = false
+      }
+
     },
     onFiltered(filteredItems) {
       this.totalRows = filteredItems.length
