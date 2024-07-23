@@ -16,11 +16,8 @@ class Lga extends Migration
         //
         Schema::create('lgas', function (Blueprint $table) {
             $table->string('lgaid');
-            $table->timestamps();
             $table->string('stateid');
             $table->string('lganame');
-            $table->integer('lsecretariate')->default(0);
-            $table->integer('status')->nullable();
         });
     }
 

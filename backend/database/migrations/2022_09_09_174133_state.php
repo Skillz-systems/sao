@@ -17,10 +17,7 @@ class State extends Migration
         Schema::create('states', function (Blueprint $table) {
             $table->string('stateid');
             $table->timestamps();
-            $table->string('prefix');
             $table->string('sname');
-            $table->string('scapital')->default(0);
-            $table->integer('status')->nullable();
         });
     }
 
