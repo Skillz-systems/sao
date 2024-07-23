@@ -1,11 +1,11 @@
 name: sao_deploy
-# on:
-#   push:
 on:
-  pull_request:
-    branches:
-      - dev
-    types: [closed]
+  push:
+# on:
+#   pull_request:
+#     branches:
+#       - dev
+#     types: [closed]
 
 jobs:
   deploy-sao-dev:
@@ -45,11 +45,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          rsync --delete -va -e 'ssh -p 7822 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
+          rsync --delete -va -e 'ssh -p 21098 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
             backend/app backend/database backend/phpunit.xml backend/storage backend/vendor backend/artisan backend/.env backend/tests backend/bootstrap \
             backend/composer.json backend/resources backend/composer.lock backend/routes backend/config backend/package.json \
-            backend/public/ backend/public skillz@103.72.76.68:saoenergy.skillzserver.com
+            backend/public/ backend/public saoenergy@saoenergy.com:api.saoenergy.com
 
-      # - name: SSH and effect migration
-      #   run: |
-      #     ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@185.160.67.60" cd saoenergy.skillzserver.com && php artisan migrate"
+      - name: SSH and effect migration
+        run: |
+          ssh -p 21098 -i ~/.ssh/id_rsa -t saoenergy@saoenergy.com" cd api.saoenergy.com && php artisan migrate"
