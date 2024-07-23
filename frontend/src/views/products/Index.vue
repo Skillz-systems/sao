@@ -551,6 +551,7 @@
       hide-header
       size="lg"
       centered
+        @hidden="clearInputs"
     >
       <validation-observer ref="addProductValidation">
         <b-form @submit.prevent>
@@ -2053,7 +2054,24 @@ export default {
       this.$refs['add-gas-product'].hide()
       this.$refs['add-street-light-product'].hide()
       this.$refs['view-product'].hide()
+      this.clearInputs()
+      console.log('hello')
     },
+
+    clearInputs(){
+      console.log("cleared")
+
+      this.productName = ''; // Clear product name input
+    this.ProductType = ''; // Clear product type input
+    this.inverterType = ''; // Clear inverter type input
+    this.solarType = ''; // Clear solar system type input
+    this.solarPanelQuantity = 0; // Clear solar panel quantity input
+    this.batteryType = ''; // Clear battery type input
+    this.batteryQuantity = 0;
+    this.description = ""
+
+    },
+
     hideEditModal() {
       this.$refs['edit-product'].hide()
     },
