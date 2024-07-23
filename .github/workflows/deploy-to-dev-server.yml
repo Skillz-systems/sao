@@ -33,9 +33,6 @@ jobs:
 
       - name: Install rsync
         run: sudo apt-get install -y rsync
-      - name: test echo
-        run: |
-          echo "${{secrets.SSH_PRIVATE_KEY}}"
 
       - name: Find and replace in document
         run: |
