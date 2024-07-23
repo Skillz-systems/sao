@@ -1,0 +1,58 @@
+name: sao_deploy
+# on:
+#   push:
+on:
+  # push:
+  #   # branches:
+  #   #   - main
+  pull_request:
+    branches:
+      - dev
+    types: [closed]
+
+jobs:
+  deploy-sao-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+        with:
+          php-version: '8.3'
+
+      - name: Copy .env
+        run: cd backend && php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+      - name: Install Dependencies
+        run: cd backend && CI=false composer clear-cache && CI=false composer update && CI=false php artisan key:generate
+
+      - name: Update apt repositories
+        run: sudo apt update
+
+      - name: Install rsync
+        run: sudo apt-get install -y rsync
+
+      - name: Find and replace in document
+        run: |
+          sed -i -e 's:backend/public/index.php:/index.php:g' backend/public/index.php && 
+          sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' backend/public/index.php && 
+          sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=skillz_sao:g' backend/.env.example && 
+          sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=skillz_tibilon:g' backend/.env.example  && 
+          sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' backend/public/index.php && 
+          sed -i -e 's:DB_PASSWORD="forge":DB_PASSWORD="Ubuxa##99":g' backend/.env.example  
+
+      - name: SSH login
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          rsync --delete -va -e 'ssh -p 7822 -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
+            backend/app backend/database backend/phpunit.xml backend/storage backend/vendor backend/artisan backend/.env backend/tests backend/bootstrap \
+            backend/composer.json backend/resources backend/composer.lock backend/routes backend/config backend/package.json \
+            backend/public/ backend/public skillz@185.160.67.60:saoenergy.skillzserver.com
+
+      # - name: SSH and effect migration
+      #   run: |
+      #     ssh -p 7822 -i ~/.ssh/id_rsa -t skillz@185.160.67.60" cd saoenergy.skillzserver.com && php artisan migrate"
