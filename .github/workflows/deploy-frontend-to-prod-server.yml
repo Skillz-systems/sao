@@ -32,7 +32,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{secrets.SSH_PRIVATE_KEY_PROD}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          rsync --delete -va -e 'ssh  -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
+          rsync --delete --exclude 'api' -va -e 'ssh  -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
             frontend/dist/ frontend/.htaccess saoenergyco@saoenergy.co.uk:www
 
       
