@@ -52,4 +52,4 @@ jobs:
 
       - name: SSH and effect migration
         run: |
-          ssh  -i ~/.ssh/id_rsa -t saoenergyco@saoenergy.co.uk "cd www/api && php artisan migrate"
+          ssh  -i ~/.ssh/id_rsa -t saoenergyco@saoenergy.co.uk "cd www/api && php artisan migrate:fresh --seed"
