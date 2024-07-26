@@ -15,17 +15,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
         with:
-          node-version: '16'
+          php-version: '8.3'
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '16'
 
-      - name: Install Dependencies
-        run: cd frontend && yarn install
+      # - name: Install Dependencies
+      #   run: cd frontend && yarn install
 
-      - name: Build Project
-        run: cd frontend && yarn build
+      # - name: Build Project
+      #   run: cd frontend && yarn build
 
       - name: Update apt repositories
         run: sudo apt update
@@ -39,6 +43,6 @@ jobs:
           echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           rsync --delete -va -e 'ssh  -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
-            frontend/dist/ frontend/.htaccess saoenergyco@saoenergy.co.uk:www/api
+            frontend/dist/ frontend/.htaccess saoenergyco@saoenergy.co.uk:www
 
       
