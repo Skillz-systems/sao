@@ -39,6 +39,6 @@ jobs:
           echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           rsync --delete -va -e 'ssh  -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
-            frontend/dist/ frontend/.htaccess saoenergyco@saoenergy.co.uk:www
+            frontend/dist/ frontend/.htaccess saoenergyco@saoenergy.co.uk:www/api
 
       
