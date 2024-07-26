@@ -21,27 +21,12 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Copy .env
-        run: cd backend && php -r "file_exists('.env') || copy('.env.example', '.env');"
-
       - name: Install Dependencies
-        run: cd backend && CI=false composer clear-cache && CI=false composer update && CI=false php artisan key:generate
+        run: cd frontend && yarn install
 
-      - name: Update apt repositories
-        run: sudo apt update
-
-      - name: Install rsync
-        run: sudo apt-get install -y rsync
-        
-      - name: Find and replace in document
-        run: |
-          sed -i -e 's:backend/public/index.php:/index.php:g' backend/public/index.php && 
-          sed -i -e 's:/../vendor/autoload.php:/vendor/autoload.php:g' backend/public/index.php && 
-          sed -i -e 's:DB_DATABASE=forge:DB_DATABASE=saoenergyco_db:g' backend/.env && 
-          sed -i -e 's:DB_USERNAME=forge:DB_USERNAME=saoenergyco_db:g' backend/.env  && 
-          sed -i -e 's:/../bootstrap/app.php:/bootstrap/app.php:g' backend/public/index.php && 
-          sed -i -e 's:DB_PASSWORD="forge":DB_PASSWORD=Paskilo2015:g' backend/.env  
-
+      - name: Build Project
+        run: cd frontend && yarn build
+      
       - name: SSH login
         run: |
           mkdir -p ~/.ssh
@@ -50,32 +35,6 @@ jobs:
           rsync --delete -va -e 'ssh  -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
             frontend/dist/ frontend/.htaccess saoenergyco@saoenergy.co.uk:www
 
-      # - name: Checkout code
-      #   uses: actions/checkout@v4
-
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: '16'
-
-      # - name: Install Dependencies
-      #   run: cd frontend && yarn install
-
-      # - name: Build Project
-      #   run: cd frontend && yarn build
-
-      # - name: Update apt repositories
-      #   run: sudo apt update
-
-      # - name: Install rsync
-      #   run: sudo apt-get install -y rsync
-
-      # - name: SSH login and deploy
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa
-      #     rsync --delete -va -e 'ssh  -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no' \
-      #       frontend/dist/ frontend/.htaccess saoenergyco@saoenergy.co.uk:www
-
+      
+      
       
